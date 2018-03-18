@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieSessionm = require('cookie-session');
+const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/key');
 
@@ -12,6 +12,16 @@ require('./services/passport'); // ไม่มีค่า Return ใน passpo
 mongoose.connect(keys.mongoURI);
 
 const app = express();
+
+app.use(
+    cookieSession({
+        maxAge: 30*24*60*1000,
+        keys: [keys.cookieKey]
+    })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 require('./routes/authRoutes')(app);
 
